@@ -1,5 +1,5 @@
 # ==========================================
-# ML Assignment 2 - Ordered as per Rubric
+# ML Assignment 2 - Final Working App
 # ==========================================
 
 import streamlit as st
@@ -32,7 +32,7 @@ from sklearn.metrics import (
 # ==========================================
 
 st.set_page_config(page_title="ML Classification App", layout="wide")
-st.title("Machine Learning Classification Models")
+st.title("Machine Learning Classification Models Comparison")
 
 # ==========================================
 # Load Dataset
@@ -42,9 +42,21 @@ data = load_breast_cancer()
 X = data.data
 y = data.target
 
+# ==========================================
+# Train-Test Split
+# ==========================================
+
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42, stratify=y
+    X,
+    y,
+    test_size=0.2,
+    random_state=42,
+    stratify=y
 )
+
+# ==========================================
+# Scaling
+# ==========================================
 
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
@@ -64,68 +76,88 @@ models = {
 }
 
 # ==========================================
-# a) DATASET UPLOAD OPTION (FIRST)
+# Train & Evaluate All Models
 # ==========================================
 
-st.header("a) Dataset Upload Option")
+results = []
 
-uploaded_file = st.file_uploader(
-    "Upload Test CSV File (Must contain 'target' column)",
-    type=["csv"]
-)
+for name, model in models.items():
+
+    if name in ["Logistic Regression", "KNN"]:
+        model.fit(X_train_scaled, y_train)
+        y_pred = model.predict(X_test_scaled)
+        y_prob = model.predict_proba(X_test_scaled)[:, 1]
+    else:
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+        y_prob = model.predict_proba(X_test)[:, 1]
+
+    results.append([
+        name,
+        accuracy_score(y_test, y_pred),
+        roc_auc_score(y_test, y_prob),
+        precision_score(y_test, y_pred),
+        recall_score(y_test, y_pred),
+        f1_score(y_test, y_pred),
+        matthews_corrcoef(y_test, y_pred)
+    ])
+
+results_df = pd.DataFrame(results, columns=[
+    "Model",
+    "Accuracy",
+    "AUC",
+    "Precision",
+    "Recall",
+    "F1 Score",
+    "MCC Score"
+])
 
 # ==========================================
-# b) MODEL SELECTION DROPDOWN (SECOND)
+# Display Comparison Table
 # ==========================================
 
-st.header("b) Model Selection")
+st.subheader("Model Performance Comparison")
+st.dataframe(results_df.round(4))
+
+# ==========================================
+# Model Selection
+# ==========================================
 
 model_choice = st.selectbox("Select a Model", list(models.keys()))
 selected_model = models[model_choice]
 
 # ==========================================
-# Train model for selected choice
+# Display Evaluation Metrics
 # ==========================================
 
-if model_choice in ["Logistic Regression", "KNN"]:
-    selected_model.fit(X_train_scaled, y_train)
-    y_pred = selected_model.predict(X_test_scaled)
-    y_prob = selected_model.predict_proba(X_test_scaled)[:, 1]
-else:
-    selected_model.fit(X_train, y_train)
-    y_pred = selected_model.predict(X_test)
-    y_prob = selected_model.predict_proba(X_test)[:, 1]
+st.subheader("Evaluation Metrics (Test Dataset)")
 
-# ==========================================
-# c) DISPLAY OF EVALUATION METRICS (THIRD)
-# ==========================================
-
-st.header("c) Evaluation Metrics (Test Dataset)")
-
-accuracy = accuracy_score(y_test, y_pred)
-auc = roc_auc_score(y_test, y_prob)
-precision = precision_score(y_test, y_pred)
-recall = recall_score(y_test, y_pred)
-f1 = f1_score(y_test, y_pred)
-mcc = matthews_corrcoef(y_test, y_pred)
+selected_row = results_df[results_df["Model"] == model_choice]
 
 col1, col2, col3 = st.columns(3)
 
-col1.metric("Accuracy", round(accuracy, 4))
-col2.metric("AUC", round(auc, 4))
-col3.metric("Precision", round(precision, 4))
+col1.metric("Accuracy", round(selected_row["Accuracy"].values[0], 4))
+col2.metric("AUC", round(selected_row["AUC"].values[0], 4))
+col3.metric("Precision", round(selected_row["Precision"].values[0], 4))
 
-col1.metric("Recall", round(recall, 4))
-col2.metric("F1 Score", round(f1, 4))
-col3.metric("MCC Score", round(mcc, 4))
+col1.metric("Recall", round(selected_row["Recall"].values[0], 4))
+col2.metric("F1 Score", round(selected_row["F1 Score"].values[0], 4))
+col3.metric("MCC Score", round(selected_row["MCC Score"].values[0], 4))
 
 # ==========================================
-# d) CONFUSION MATRIX & CLASSIFICATION REPORT (FOURTH)
+# Confusion Matrix
 # ==========================================
 
-st.header("d) Confusion Matrix and Classification Report")
+st.subheader("Confusion Matrix (Test Dataset)")
 
-cm = confusion_matrix(y_test, y_pred)
+if model_choice in ["Logistic Regression", "KNN"]:
+    selected_model.fit(X_train_scaled, y_train)
+    predictions = selected_model.predict(X_test_scaled)
+else:
+    selected_model.fit(X_train, y_train)
+    predictions = selected_model.predict(X_test)
+
+cm = confusion_matrix(y_test, predictions)
 
 cm_df = pd.DataFrame(
     cm,
@@ -133,7 +165,58 @@ cm_df = pd.DataFrame(
     columns=["Predicted 0", "Predicted 1"]
 )
 
-st.subheader("Confusion Matrix")
 st.dataframe(cm_df)
 
-st.subheader("Classification Report")
+# ==========================================
+# Classification Report (Tabular)
+# ==========================================
+
+st.subheader("Classification Report (Test Dataset)")
+
+report_dict = classification_report(
+    y_test,
+    predictions,
+    output_dict=True
+)
+
+report_df = pd.DataFrame(report_dict).transpose()
+st.dataframe(report_df.round(4))
+
+# ==========================================
+# Optional Dataset Upload
+# ==========================================
+
+st.markdown("---")
+st.subheader("Upload Your Own Test CSV (Optional)")
+
+uploaded_file = st.file_uploader(
+    "Upload CSV with 'target' column",
+    type=["csv"]
+)
+
+if uploaded_file is not None:
+    test_data = pd.read_csv(uploaded_file)
+
+    if "target" not in test_data.columns:
+        st.error("CSV must contain 'target' column.")
+    else:
+        X_upload = test_data.drop("target", axis=1)
+        y_upload = test_data["target"]
+
+        if model_choice in ["Logistic Regression", "KNN"]:
+            X_upload_scaled = scaler.transform(X_upload)
+            preds = selected_model.predict(X_upload_scaled)
+        else:
+            preds = selected_model.predict(X_upload)
+
+        st.subheader("Confusion Matrix (Uploaded Data)")
+        upload_cm = confusion_matrix(y_upload, preds)
+        st.dataframe(pd.DataFrame(upload_cm))
+
+        st.subheader("Classification Report (Uploaded Data)")
+        upload_report = classification_report(
+            y_upload,
+            preds,
+            output_dict=True
+        )
+        st.dataframe(pd.DataFrame(upload_report).transpose().round(4))
