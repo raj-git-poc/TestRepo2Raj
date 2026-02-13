@@ -14,7 +14,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
 
 from sklearn.metrics import (
     accuracy_score,
@@ -60,7 +61,11 @@ models = {
     "KNN": KNeighborsClassifier(),
     "Naive Bayes": GaussianNB(),
     "Random Forest": RandomForestClassifier(),
-    "Gradient Boosting": GradientBoostingClassifier()
+    "XGBoost": XGBClassifier(
+        use_label_encoder=False,
+        eval_metric="logloss",
+        random_state=42
+    )
 }
 
 # ==========================================
@@ -83,7 +88,7 @@ st.header("b) Model Selection")
 model_choice = st.selectbox("Select a Model", list(models.keys()))
 selected_model = models[model_choice]
 
-# Train selected model
+# Train Selected Model
 if model_choice in ["Logistic Regression", "KNN"]:
     selected_model.fit(X_train_scaled, y_train)
     y_pred_test = selected_model.predict(X_test_scaled)
@@ -94,7 +99,7 @@ else:
     y_prob_test = selected_model.predict_proba(X_test)[:, 1]
 
 # ==========================================
-# Uploaded Dataset Evaluation (Displayed First)
+# Uploaded Dataset Evaluation (First)
 # ==========================================
 
 if uploaded_file is not None:
@@ -118,7 +123,6 @@ if uploaded_file is not None:
             y_pred_upload = selected_model.predict(X_upload)
             y_prob_upload = selected_model.predict_proba(X_upload)[:, 1]
 
-        # Evaluation Metrics
         st.subheader("Evaluation Metrics (Uploaded Data)")
 
         col1, col2, col3 = st.columns(3)
@@ -131,12 +135,9 @@ if uploaded_file is not None:
         col2.metric("F1 Score", round(f1_score(y_upload, y_pred_upload), 4))
         col3.metric("MCC Score", round(matthews_corrcoef(y_upload, y_pred_upload), 4))
 
-        # Confusion Matrix
         st.subheader("Confusion Matrix (Uploaded Data)")
-        cm_upload = confusion_matrix(y_upload, y_pred_upload)
-        st.dataframe(pd.DataFrame(cm_upload))
+        st.dataframe(pd.DataFrame(confusion_matrix(y_upload, y_pred_upload)))
 
-        # Classification Report
         st.subheader("Classification Report (Uploaded Data)")
         report_upload = classification_report(
             y_upload,
@@ -169,8 +170,7 @@ col3.metric("MCC Score", round(matthews_corrcoef(y_test, y_pred_test), 4))
 st.header("d) Confusion Matrix and Classification Report (Test Dataset)")
 
 st.subheader("Confusion Matrix")
-cm_test = confusion_matrix(y_test, y_pred_test)
-st.dataframe(pd.DataFrame(cm_test))
+st.dataframe(pd.DataFrame(confusion_matrix(y_test, y_pred_test)))
 
 st.subheader("Classification Report")
 report_test = classification_report(
