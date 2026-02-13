@@ -28,7 +28,7 @@ from sklearn.metrics import (
 )
 
 # ==========================================
-# Page Setup
+# Page Configuration
 # ==========================================
 
 st.set_page_config(page_title="ML Classification App", layout="wide")
@@ -64,20 +64,7 @@ models = {
 }
 
 # ==========================================
-# a) DATASET UPLOAD OPTION
+# a) Dataset Upload Option
 # ==========================================
 
-st.header("a) Dataset Upload Option")
-
-uploaded_file = st.file_uploader(
-    "Upload Test CSV File (Must contain 'target' column)",
-    type=["csv"]
-)
-
-# ==========================================
-# b) MODEL SELECTION
-# ==========================================
-
-st.header("b) Model Selection")
-
-model
+st.header(
