@@ -193,7 +193,9 @@ st.header("Model Performance Comparison (All Models)")
 
 comparison_data = []
 
-for name, model_instance in models.items():
+for name in models.keys():
+
+    model_instance = models[name]
 
     try:
         if name in ["Logistic Regression", "KNN"]:
@@ -216,10 +218,11 @@ for name, model_instance in models.items():
         ])
 
     except Exception as e:
-        st.error(f"Error training {name}: {e}")
+        st.warning(f"{name} failed: {e}")
 
-# Create DataFrame only if data exists
-if comparison_data:
+# Only display if data exists
+if len(comparison_data) > 0:
+
     comparison_df = pd.DataFrame(comparison_data, columns=[
         "Model",
         "Accuracy",
@@ -229,6 +232,9 @@ if comparison_data:
         "F1 Score",
         "MCC Score"
     ])
-    st.dataframe(comparison_df.round(4))
+
+    st.dataframe(comparison_df.round(4), use_container_width=True)
+
 else:
-    st.warning("Model comparison could not be generated.")
+    st.error("No models were successfully evaluated.")
+
