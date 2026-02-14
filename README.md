@@ -136,7 +136,7 @@ The app dynamically trains and evaluates models based on user selection.
 **Project Structure**
 
 ```bash
-ML_Assignment_2/
+ML-Assignment-2/
 ├── model/
 │   ├── train_models.py         # Model training & evaluation script
 │   └── model_results.csv       # Saved model performance results
