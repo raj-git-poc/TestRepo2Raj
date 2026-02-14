@@ -69,6 +69,28 @@ models = {
 }
 
 # ==========================================
+# a) Dataset Download Option
+# ==========================================
+
+st.header("a) Dataset Download Option")
+
+# GitHub raw file URL
+url = "https://raw.githubusercontent.com/raj-git-poc/TestRepo2Raj/edit/main/sample_test_data.csv"
+
+# Fetch the file content
+response = requests.get(url)
+file_bytes = response.content
+
+st.title("Download CSV from GitHub")
+
+st.download_button(
+    label="Download Sample CSV",
+    data=file_bytes,
+    file_name="sample_test_data.csv",
+    mime="text/csv"
+)
+
+# ==========================================
 # a) Dataset Upload Option
 # ==========================================
 
