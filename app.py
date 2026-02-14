@@ -81,8 +81,6 @@ url = "https://raw.githubusercontent.com/raj-git-poc/TestRepo2Raj/edit/main/samp
 response = requests.get(url)
 file_bytes = response.content
 
-st.title("Download CSV from GitHub")
-
 st.download_button(
     label="Download Sample CSV",
     data=file_bytes,
