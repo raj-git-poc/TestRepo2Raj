@@ -1,105 +1,169 @@
+**a. Problem statement**
 
-Machine Learning Classification Models – Assignment 2
-1.	Problem Statement
-The objective of this assignment is to implement multiple machine learning classification models on a public dataset and compare their performance using standard evaluation metrics.
-An interactive Streamlit web application has also been developed to:
-•	Compare model performances
-•	Allow model selection
-•	Display evaluation metrics
-•	Show confusion matrix and classification report
-•	Allow dataset upload for prediction and validation
-This project demonstrates a complete end-to-end Machine Learning workflow including:
-•	Data preprocessing
-•	Feature scaling
-•	Model training
-•	Model evaluation
-•	Performance comparison
-•	Web deployment using Streamlit
-________________________________________
-2.	Dataset Description
-Dataset Name: Breast Cancer Wisconsin (Diagnostic) Dataset
+This project implements and compares multiple Machine Learning classification models using a real-world medical dataset.
+
+The objective is to evaluate how different algorithms perform on the same dataset using standard performance metrics and present the results through an interactive Streamlit web application.
+
+The project demonstrates a complete end-to-end ML workflow including:
+
+Data preprocessing
+
+Model training
+
+Model evaluation
+
+Performance comparison
+
+Web deployment using Streamlit
+
+
+**b. Dataset Description**
+
+Dataset: Breast Cancer Wisconsin (Diagnostic) Dataset
 Source: UCI Machine Learning Repository
-URL: https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Diagnostic%29
-The dataset is also available in Scikit-learn via:
+https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)
+
+The dataset was loaded using:
+
 from sklearn.datasets import load_breast_cancer
-Dataset Details
-•	Total Instances: 569
-•	Total Features: 30 numerical features
-•	Target Classes:
-o	0 → Malignant
-o	1 → Benign
-•	Problem Type: Binary Classification
-This dataset satisfies the assignment requirements:
-•	Minimum 500 instances ✅
-•	Minimum 12 features ✅
-Data Preprocessing Steps
-•	Data split into:
-o	80% Training set
-o	20% Testing set
-•	Feature scaling applied using StandardScaler
-o	Required for Logistic Regression and KNN
-•	Stratified sampling used to maintain class balance
-________________________________________
-3.	Models Implemented & Evaluation Metrics
-The following 6 machine learning models were implemented:
-1.	Logistic Regression
-2.	Decision Tree Classifier
-3.	K-Nearest Neighbors (KNN)
-4.	Naive Bayes (Gaussian)
-5.	Random Forest (Ensemble – Bagging)
-6.	XGBoost (Extreme Gradient Boosting – Ensemble Boosting Model)
-About XGBoost
-XGBoost is an optimized implementation of Gradient Boosting that includes:
-•	Regularization
-•	Efficient tree boosting
-•	Parallel processing
-•	Better generalization performance
-It is widely used in industry and machine learning competitions due to its high predictive accuracy.
-________________________________________
-Evaluation Metrics Used
-Each model was evaluated using the following metrics:
-•	Accuracy
-•	AUC (Area Under ROC Curve)
-•	Precision
-•	Recall
-•	F1 Score
-•	Matthews Correlation Coefficient (MCC)
-The results are automatically saved in:
+
+**Dataset Details:**
+
+569 total instances
+
+30 numerical features
+
+Binary classification problem:
+
+0 → Malignant
+
+1 → Benign
+
+This dataset satisfies assignment requirements:
+
+Minimum 500 instances
+
+Minimum 12 features
+
+**Data Preprocessing**
+
+The following steps were performed before training:
+
+Dataset loading
+
+Train-test split (80% training, 20% testing)
+
+Feature scaling using StandardScaler (for models requiring scaling)
+
+**c. Models used**
+
+**The following six classification models were implemented:**
+
+Logistic Regression
+
+Decision Tree Classifier
+
+K-Nearest Neighbor Classifier
+
+Naive Bayes Classifier - Gaussian
+
+Ensemble Model - Random Forest
+
+Ensemble Model - XGBoost
+
+**Evaluation Metrics Used**
+
+**Each model was evaluated using the following metrics:**
+
+Accuracy
+
+AUC Score
+
+Precision
+
+Recall
+
+F1 Score
+
+Matthews Correlation Coefficient (MCC Score)
+
+**Model results are stored in:**
+
 model/model_results.csv
-________________________________________
-4.	Model Performance Comparison
-ML Model	Accuracy	AUC	Precision	Recall	F1 Score	MCC Score
-Logistic Regression	Generated in app					
-Decision Tree	Generated in app					
-KNN	Generated in app					
-Naive Bayes	Generated in app					
-Random Forest	Generated in app					
-XGBoost	Generated in app					
-Note: Exact values are dynamically generated in the Streamlit application and stored in model_results.csv.
-________________________________________
-5.	Observations on Model Performance
-ML Model	Observation
-Logistic Regression	Performs very well due to good linear separability of features. Balanced bias-variance tradeoff.
-Decision Tree	Performs reasonably well but may slightly overfit without pruning.
-KNN	Sensitive to feature scaling; performs well after normalization.
-Naive Bayes	Assumes feature independence; performs decently but slightly lower than ensemble models.
-Random Forest	Strong performance due to ensemble learning and reduced overfitting.
-XGBoost	Typically achieves the highest performance due to optimized boosting, regularization, and efficient tree construction.
-Overall, ensemble models (Random Forest and XGBoost) generally outperform individual classifiers due to better generalization and variance reduction.
-________________________________________
-6.	Streamlit Application Features
-The deployed Streamlit application includes:
-•	Dataset upload option (CSV file with target column)
-•	Model selection dropdown
-•	Evaluation on uploaded dataset
-•	Evaluation metrics display:
-    o	Accuracy
-    o	AUC
-    o	Precision
-    o	Recall
-    o	F1 Score
-    o	MCC
-•	Confusion Matrix display
-•	Classification Report display
-•	Model performance comparison table
-The application ensures interactive evaluation and visualization of model performance.
+
+**Model Performance Comparison**
+
+| ML Model Name              | Accuracy  | AUC     | Precision | Recall   | F1       | MCC     |
+|----------------------------|-----------|---------|-----------|----------|----------|---------|
+| Logistic Regression        | 0.9825    | 0.9954  | 0.9861    | 0.9861   | 0.9861   | 0.9623  |
+| Decision Tree              | 0.9123    | 0.9157  | 0.9559    | 0.9028   | 0.9286   | 0.8174  |
+| KNN                        | 0.9561    | 0.9788  | 0.9589    | 0.9722   | 0.9655   | 0.9054  |
+| Naive Bayes                | 0.9386    | 0.9878  | 0.9452    | 0.9583   | 0.9517   | 0.8676  |
+| Random Forest (Ensemble)   | 0.9561    | 0.9937  | 0.9589    | 0.9722   | 0.9655   | 0.9054  |
+| XGBoost (Ensemble)         | 0.9561    | 0.9901  | 0.9467    | 0.9861   | 0.9660   | 0.9058  |
+
+
+**Model Performance Comparison**
+
+| ML Model Name | Observation about Model Performance |
+|---------------|-------------------------------------|
+| Logistic Regression | Performs very well on this dataset due to good linear separability of features. Shows strong accuracy, precision, and AUC. Provides a good balance between bias and variance. |
+| Decision Tree | Achieves good accuracy but may slightly overfit the training data. Performance is reasonable but less stable compared to ensemble methods. |
+| K-Nearest Neighbors (KNN) | Performance improves significantly after feature scaling. Sensitive to the choice of K and distance metric. Works well but may be slower for larger datasets. |
+| Naive Bayes | Performs moderately well. Since it assumes feature independence, it may not fully capture complex relationships between features, leading to slightly lower performance compared to other models. |
+| Random Forest (Ensemble) | Shows strong and stable performance due to ensemble learning. Reduces overfitting by combining multiple decision trees and provides high generalization ability. |
+| XGBoost (Ensemble) | Often achieves the best or near-best performance. Uses sequential boosting and regularization to reduce errors and overfitting. Captures complex patterns effectively and delivers high predictive power. |
+
+
+**Streamlit Application Features**
+
+The Streamlit web application includes:
+
+  Dataset upload option (CSV with target column)
+  
+  Model selection dropdown
+  
+  Evaluation metrics display
+  
+  Confusion matrix
+  
+  Classification report
+  
+  Model performance comparison table
+
+The app dynamically trains and evaluates models based on user selection.
+
+**Project Structure**
+
+```bash
+ML_Assignment_2/
+├── model/
+│   ├── train_models.py         # Model training & evaluation script
+│   └── model_results.csv       # Saved model performance results
+└── README.md                   # Project documentation
+├── app.py                      # Streamlit web application
+|── breast_cancer_dataset.csv   # Training dataset downloaded from UCI Portal. This is not used as code is downloading the data directly at runtime
+├── requirements.txt            # Required Python libraries
+|── sample_test_data.csv        # sample test data to download and validate from Streamlit portal
+```
+
+
+**How to Run the Project**
+
+Option 1: Run Using Deployed Streamlit App (Recommended)
+
+Access the application directly using the deployed URL:
+
+https://ml-assignment-2-ajffoyej9h3pkimlabefzr.streamlit.app/
+
+The above URL is also mentioned in the assignment PDF file.
+
+Option 2: Run Locally
+
+Step 1: Install Dependencies
+
+pip install -r requirements.txt
+
+Step 2: Generate Model Results
+
+python model/train_models.py
