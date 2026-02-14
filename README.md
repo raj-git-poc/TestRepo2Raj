@@ -154,7 +154,7 @@ Option 1: Run Using Deployed Streamlit App (Recommended)
 
 Access the application directly using the deployed URL:
 
-https://ml-assignment-2-ajffoyej9h3pkimlabefzr.streamlit.app/
+https://ml-assignment-2-sit8csx4g6uujvztxniryk.streamlit.app/
 
 The above URL is also mentioned in the assignment PDF file.
 
