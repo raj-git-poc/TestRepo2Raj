@@ -27,7 +27,7 @@ from sklearn.metrics import (
     confusion_matrix,
     classification_report
 )
-
+import requests
 # ==========================================
 # Page Configuration
 # ==========================================
