@@ -1,6 +1,9 @@
 # ==========================================
-# ML Assignment 2
-# Model Training and Evaluation Script
+# ML Assignment 2 (Model Training and Evaluation Script)
+# ==========================================
+
+# ==========================================
+# Load Library
 # ==========================================
 
 import os
@@ -37,9 +40,6 @@ y = data.target
 
 feature_names = data.feature_names
 
-print("Dataset Shape:", X.shape)
-print("Number of Features:", len(feature_names))
-
 # ==========================================
 # Step 2: Train-Test Split
 # ==========================================
@@ -50,9 +50,6 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=42,
     stratify=y
 )
-
-print("Training Set Shape:", X_train.shape)
-print("Test Set Shape:", X_test.shape)
 
 # ==========================================
 # Step 3: Feature Scaling
@@ -86,9 +83,6 @@ models = {
 results = []
 
 for name, model in models.items():
-
-    print("\nTraining:", name)
-
     # Scaling required only for LR and KNN
     if name in ["Logistic Regression", "KNN"]:
         model.fit(X_train_scaled, y_train)
